@@ -372,3 +372,141 @@ The following components will become Client Components only when introduced:
 Reason:
 
 Follow the Server First philosophy while minimizing client-side JavaScript.
+
+
+### Domain Model Changes
+Before
+Project
+├── id
+├── name
+├── description
+├── status
+├── owner
+├── createdAt
+├── updatedAt
+└── isFavorite
+After
+Project
+├── id                // Internal unique identifier
+├── slug              // Public URL identifier
+├── name
+├── description
+├── status
+├── owner
+├── createdAt
+├── updatedAt
+└── isFavorite
+
+
+Decision: Public routing uses slug instead of id. Internal id remains available for backend integration, database relations, and future APIs.
+
+Route Flow
+URL
+      │
+      ▼
+slug
+      │
+      ▼
+getProjectBySlug(slug)
+      │
+      ▼
+Project
+      │
+      ▼
+Project Details UI
+Decision
+Dynamic routes use project slugs.
+Slugs provide readable and shareable URLs.
+Internal IDs are never exposed in URLs.
+Future backend APIs may still use IDs internally.
+
+## Project Details Architecture
+
+Add a new section.
+
+Project Details Page
+
+Project Details Page (Server)
+        │
+        ▼
+getProjectBySlug(slug)
+        │
+        ▼
+ProjectDetails
+        │
+        ├── ProjectHeader
+        ├── ProjectDescription
+        ├── ProjectOwner
+        ├── ProjectMetadata
+        └── ProjectStatusBadge
+
+        ## Design System Decisions
+
+### Product
+- SaaS dashboard
+
+### Theme
+- Light and Dark mode
+
+### Visual Style
+- Minimal SaaS
+- Neutral color palette
+- Rounded modern cards
+- Soft shadows
+- Subtle animations
+
+### Components
+- Reusable UI primitives
+- Consistent spacing
+- Semantic status colors only
+
+### Navigation
+- Modern sidebar with rounded active item ("pill" style)
+
+
+## Button
+
+### Responsibility
+Reusable button component for all application actions.
+
+### Variants
+- Primary
+- Secondary
+- Outline
+- Ghost
+- Destructive
+
+### Sizes
+- Small
+- Default
+- Large
+
+### Accessibility
+- Keyboard accessible
+- Visible focus ring
+- Supports disabled state
+
+### Used By
+- Projects
+- Authentication
+- Settings
+- Dashboard
+
+
+## Design System
+
+### Purpose
+
+The application maintains an internal UI Preview page that serves as a lightweight design system and component showcase.
+
+### Location
+
+app/(dev)/ui-preview
+
+### Goals
+
+- Validate UI primitives
+- Test Light/Dark themes
+- Verify responsiveness
+- Showcase component APIs
+- Reduce duplicated demo code

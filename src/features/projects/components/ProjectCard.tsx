@@ -1,3 +1,4 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProjectStatusBadge } from "./ProjectStatusBadge";
 import type { Project } from "../types/project";
 
@@ -8,12 +9,22 @@ interface ProjectCardProps {
 /** Renders a summary card for a single project. */
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
-    <article>
-      <h3>{project.name}</h3>
-      {project.description ? <p>{project.description}</p> : null}
-      <p>Owner: {project.owner.name}</p>
-      <ProjectStatusBadge status={project.status} />
-      <p>Updated: {project.updatedAt.toLocaleDateString()}</p>
-    </article>
+    <Card>
+      <CardHeader>
+        <CardTitle>{project.name}</CardTitle>
+        {project.description ? (
+          <CardDescription>{project.description}</CardDescription>
+        ) : null}
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          Owner: {project.owner.name}
+        </p>
+        <ProjectStatusBadge status={project.status} />
+        <p className="text-sm text-muted-foreground">
+          Updated: {project.updatedAt.toLocaleDateString()}
+        </p>
+      </CardContent>
+    </Card>
   );
 };

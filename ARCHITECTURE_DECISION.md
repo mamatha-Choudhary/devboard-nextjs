@@ -124,4 +124,20 @@ Presentation components receive data through props.
 
 ---
 
-## ADR-009
+## ADR-009: Slug-Based Routing
+
+Status: Accepted
+
+Decision:
+Project detail routes use a slug instead of the internal project ID.
+
+Rationale:
+- Improves readability.
+- Produces cleaner URLs.
+- Better SEO.
+- Public URLs remain independent from internal database identifiers.
+
+Consequences:
+- The Project model includes both `id` and `slug`.
+- Services expose `getProjectBySlug()`.
+- Dynamic routes are implemented using `[slug]`.

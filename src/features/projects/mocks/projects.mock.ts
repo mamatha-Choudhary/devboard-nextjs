@@ -4,6 +4,7 @@ import type { Project } from "../types/project";
 export const projectsMock: Project[] = [
   {
     id: "proj-001",
+    slug: "redesign-marketing-homepage",
     name: "Redesign Marketing Homepage",
     description:
       "Refresh the public marketing site with a modern layout and better conversion flow.",
@@ -20,6 +21,7 @@ export const projectsMock: Project[] = [
   },
   {
     id: "proj-002",
+    slug: "mobile-app-navigation-overhaul",
     name: "Mobile App Navigation Overhaul",
     description:
       "Simplify the app navigation experience for first-time users and power users alike.",
@@ -35,6 +37,7 @@ export const projectsMock: Project[] = [
   },
   {
     id: "proj-003",
+    slug: "customer-insights-dashboard",
     name: "Customer Insights Dashboard",
     description:
       "Build a dashboard that surfaces product usage trends and retention signals.",
@@ -51,6 +54,7 @@ export const projectsMock: Project[] = [
   },
   {
     id: "proj-004",
+    slug: "internal-api-documentation",
     name: "Internal API Documentation",
     description:
       "Document the new platform APIs and provide onboarding guidance for engineers.",
@@ -66,6 +70,7 @@ export const projectsMock: Project[] = [
   },
   {
     id: "proj-005",
+    slug: "design-system-audit",
     name: "Design System Audit",
     description:
       "Review and standardize core UI components to improve consistency across the product.",
@@ -82,6 +87,7 @@ export const projectsMock: Project[] = [
   },
   {
     id: "proj-006",
+    slug: "operations-automation-sprint",
     name: "Operations Automation Sprint",
     description:
       "Automate repetitive reporting tasks and reduce manual handoffs between teams.",

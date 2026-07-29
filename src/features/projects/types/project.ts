@@ -12,6 +12,7 @@ export interface User {
 /** Represents a project in the application domain. */
 export interface Project {
   id: string;
+  slug: string;
   name: string;
   description?: string;
   status: ProjectStatus;
