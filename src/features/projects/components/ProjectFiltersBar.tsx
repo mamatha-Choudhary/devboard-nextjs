@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
+import { X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ProjectStatus } from "../types/project";
 import { ProjectFavoritesFilter } from "./ProjectFavoritesFilter";
@@ -15,7 +15,7 @@ interface ProjectFiltersBarProps {
   favorites?: boolean;
 }
 
-/** Renders the shared projects filter controls in a cohesive toolbar. */
+/** Renders the shared projects filter controls in a stable two-row layout. */
 export const ProjectFiltersBar = ({
   search,
   status,
@@ -25,7 +25,8 @@ export const ProjectFiltersBar = ({
   const searchParams = useSearchParams();
   const [resetSignal, setResetSignal] = useState(0);
 
-  const hasActiveFilters = Boolean(search || (status && status !== "All") || favorites);
+  const activeStatus = status && status !== "All" ? status : undefined;
+  const hasActiveFilters = Boolean(search || activeStatus || favorites);
 
   const handleClearFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -41,8 +42,9 @@ export const ProjectFiltersBar = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-xs md:flex-row md:items-end md:justify-between">
-      <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-end">
+    <div className="flex flex-col rounded-xl border border-border bg-card p-4 shadow-xs">
+      {/* Row 1: Fixed Control Row (Search, Status, Favorites) */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
         <div className="flex-1">
           <ProjectSearch initialValue={search} resetSignal={resetSignal} />
         </div>
@@ -50,20 +52,56 @@ export const ProjectFiltersBar = ({
         <ProjectFavoritesFilter checked={favorites ?? false} />
       </div>
 
-      {hasActiveFilters && (
-        <div className="flex flex-col gap-1.5 self-end sm:self-auto">
-          <span className="text-xs font-medium opacity-0 hidden sm:block">Reset</span>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleClearFilters}
-            className="h-10 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-3.5 w-3.5" />
-            <span>Clear filters</span>
-          </Button>
+      {/* Row 2: Secondary Info & Action Row (Zero Layout Shift) */}
+      <div className="mt-4 flex flex-col gap-2 border-t border-border/60 pt-3 sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground min-h-[36px]">
+        {/* Left: Active Filter Summary Tags */}
+        <div className="flex flex-wrap items-center gap-2 min-h-[24px]">
+          <span className="inline-flex items-center gap-1 text-muted-foreground font-medium">
+            <Filter className="h-3.5 w-3.5" />
+            <span>Active Filters:</span>
+          </span>
+
+          {!hasActiveFilters ? (
+            <span className="italic text-muted-foreground/70">None</span>
+          ) : (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {search && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 font-medium text-foreground">
+                  Search: &quot;{search}&quot;
+                </span>
+              )}
+              {activeStatus && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 font-medium text-foreground">
+                  Status: {activeStatus}
+                </span>
+              )}
+              {favorites && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 font-medium text-amber-600 dark:text-amber-400">
+                  ★ Favorites Only
+                </span>
+              )}
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Right: Clear Filters Action Slot */}
+        <div className="flex items-center justify-end">
+          {hasActiveFilters ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground hover:bg-muted"
+            >
+              <X className="h-3.5 w-3.5" />
+              <span>Clear all filters</span>
+            </Button>
+          ) : (
+            <span className="text-[11px] text-muted-foreground/60">No filters applied</span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { BadgePreview } from "./components/BadgePreview";
 import { ButtonPreview } from "./components/ButtonPreview";
 import { CardPreview } from "./components/CardPreview";
+import { DropdownMenuPreview } from "./components/DropdownMenuPreview";
 import { InputPreview } from "./components/InputPreview";
 import { PreviewSection } from "./components/PreviewSection";
 import { ThemeToggle } from "./components/ThemeToggle";
@@ -36,6 +37,13 @@ export default function UIPreviewPage() {
           description="Flexible surfaces for content grouping and layout composition."
         >
           <CardPreview />
+        </PreviewSection>
+
+        <PreviewSection
+          title="Dropdown Menus"
+          description="Accessible popover menus for actions, navigation, and settings."
+        >
+          <DropdownMenuPreview />
         </PreviewSection>
 
         <PreviewSection
