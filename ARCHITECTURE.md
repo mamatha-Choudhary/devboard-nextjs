@@ -522,25 +522,60 @@ The authentication system is designed to be modular, secure, and scalable while 
 
 ### Authentication Flow
 
-User
-↓
-Login / Register
-↓
-API Route
-↓
-Validate Credentials
-↓
-Hash / Compare Password (bcryptjs)
-↓
-Generate JWT Tokens
-↓
-Store Tokens in HttpOnly Cookies
-↓
-Protected Routes
-↓
-Middleware Verification
-↓
-Authenticated Application
+#### Login Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Page as Login Page (Client)
+    participant API as POST /api/auth/login
+    participant Repo as UserRepository
+    participant Utils as JWT & Cookie Utils
+
+    User->>Page: Fill email & password and click "Sign In"
+    Page->>Page: Validate locally with Zod (loginSchema)
+    Page->>API: POST /api/auth/login { email, password }
+    API->>Page: 400 Bad Request (if Zod validation fails)
+    API->>Repo: findByEmail(email)
+    Repo-->>API: StoredUser (with passwordHash)
+    API->>Utils: comparePassword(password, passwordHash)
+    Utils-->>API: boolean match
+    API->>Utils: createAccessToken() & createRefreshToken()
+    API->>Utils: setAccessTokenCookie() & setRefreshTokenCookie()
+    Utils-->>User: Set HttpOnly Cookies
+    API-->>Page: 200 OK { user: safeUser }
+    Page->>User: Redirect to /dashboard
+```
+
+#### Registration Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Page as Register Page (Client)
+    participant API as POST /api/auth/register
+    participant Repo as UserRepository
+    participant Utils as Password & JWT Utils
+
+    User->>Page: Fill Name, Email, Password, Confirm Password
+    Page->>Page: Validate locally with Zod (registerSchema)
+    Page->>API: POST /api/auth/register { name, email, password }
+    API->>Repo: findByEmail(email)
+    alt Email already exists
+        API-->>Page: 409 Conflict { message: "Account already exists" }
+    else Email is unique
+        API->>Utils: hashPassword(password)
+        Utils-->>API: hashed String
+        API->>Repo: createUser({ name, email, passwordHash })
+        Repo-->>API: New User
+        API->>Utils: createAccessToken() & createRefreshToken()
+        API->>Utils: setAccessTokenCookie() & setRefreshTokenCookie()
+        API-->>Page: 201 Created { user: safeUser }
+        Page->>User: Redirect to /dashboard
+    end
+```
 
 ### Token Strategy
 

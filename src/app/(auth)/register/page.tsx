@@ -14,10 +14,10 @@ import {
   AuthFormField,
   PasswordInput,
 } from "@/features/auth/components";
-import { loginSchema, type LoginSchema } from "@/features/auth/validation/auth.schema";
+import { registerSchema, type RegisterSchema } from "@/features/auth/validation/auth.schema";
 import { AuthService } from "@/features/auth/services/auth.service";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -25,24 +25,26 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterSchema>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: LoginSchema) => {
+  const onSubmit = async (data: RegisterSchema) => {
     try {
       setErrorMessage(null);
-      await AuthService.login(data);
+      await AuthService.register(data);
       router.push("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
       } else {
-        setErrorMessage("Failed to sign in. Please check your credentials.");
+        setErrorMessage("Failed to create account. Please try again.");
       }
     }
   };
@@ -50,8 +52,8 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <AuthHeader
-        title="Sign In"
-        subtitle="Enter your credentials to access your DevBoard workspace."
+        title="Create Account"
+        subtitle="Sign up for a DevBoard workspace account to get started."
       />
 
       {errorMessage && (
@@ -62,6 +64,17 @@ export default function LoginPage() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <AuthFormField id="name" label="Full Name" error={errors.name?.message}>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Mamatha Choudhary"
+            autoComplete="name"
+            disabled={isSubmitting}
+            {...register("name")}
+          />
+        </AuthFormField>
+
         <AuthFormField id="email" label="Email Address" error={errors.email?.message}>
           <Input
             id="email"
@@ -76,10 +89,20 @@ export default function LoginPage() {
         <AuthFormField id="password" label="Password" error={errors.password?.message}>
           <PasswordInput
             id="password"
-            placeholder="••••••••"
-            autoComplete="current-password"
+            placeholder="At least 8 characters"
+            autoComplete="new-password"
             disabled={isSubmitting}
             {...register("password")}
+          />
+        </AuthFormField>
+
+        <AuthFormField id="confirmPassword" label="Confirm Password" error={errors.confirmPassword?.message}>
+          <PasswordInput
+            id="confirmPassword"
+            placeholder="Re-enter password"
+            autoComplete="new-password"
+            disabled={isSubmitting}
+            {...register("confirmPassword")}
           />
         </AuthFormField>
 
@@ -91,18 +114,18 @@ export default function LoginPage() {
           {isSubmitting ? (
             <div className="flex items-center justify-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Signing in...</span>
+              <span>Creating account...</span>
             </div>
           ) : (
-            "Sign In"
+            "Create Account"
           )}
         </Button>
       </form>
 
       <AuthFooter
-        promptText="Don't have an account?"
-        linkText="Register here"
-        linkHref="/register"
+        promptText="Already have an account?"
+        linkText="Sign in here"
+        linkHref="/login"
       />
     </AuthLayout>
   );
