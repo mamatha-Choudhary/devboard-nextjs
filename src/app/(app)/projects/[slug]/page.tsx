@@ -17,13 +17,13 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 
   if (!project) {
     return {
-      title: "Project not found",
+      title: "Project Not Found",
     };
   }
 
   return {
-    title: `${project.name} | DevBoard`,
-    description: project.description ?? `Details for ${project.name}`,
+    title: project.name,
+    description: project.description ?? `Details and timeline for ${project.name}`,
   };
 }
 

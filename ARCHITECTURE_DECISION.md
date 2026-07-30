@@ -141,3 +141,107 @@ Consequences:
 - The Project model includes both `id` and `slug`.
 - Services expose `getProjectBySlug()`.
 - Dynamic routes are implemented using `[slug]`.
+
+
+
+# ADR-006 - Authentication Strategy
+
+## Status
+
+Accepted
+
+## Context
+
+DevBoard requires a secure authentication system that is production-ready, educational, and extensible.
+
+The goal is to understand authentication internals while maintaining modern security practices.
+
+## Options Considered
+
+### 1. Auth.js / NextAuth
+
+Pros
+
+- Mature ecosystem
+- Built-in providers
+- Session management
+
+Cons
+
+- Abstracts authentication internals
+- Less educational for understanding JWT and token lifecycle
+
+### 2. Clerk
+
+Pros
+
+- Fast setup
+- Excellent developer experience
+
+Cons
+
+- Vendor dependency
+- Limited control
+
+### 3. Firebase Authentication
+
+Pros
+
+- Easy integration
+- Social providers
+
+Cons
+
+- External dependency
+- Less aligned with custom backend architecture
+
+### 4. Custom JWT Authentication (Selected)
+
+Pros
+
+- Full understanding of authentication flow
+- Fine-grained control
+- Strong portfolio value
+- Easy to explain in interviews
+- Extensible for future features
+
+Cons
+
+- More implementation effort
+- Greater responsibility for security
+
+## Decision
+
+DevBoard will use a custom JWT authentication implementation.
+
+The system will use:
+
+- jose for JWT operations
+- bcryptjs for password hashing
+- HttpOnly Cookies
+- Access Token (15 minutes)
+- Refresh Token (7 days)
+- Middleware-based route protection
+
+## Security Principles
+
+- Never store tokens in localStorage
+- Use HttpOnly cookies
+- Hash all passwords
+- Short-lived access tokens
+- Long-lived refresh tokens
+- Validate all protected routes using middleware
+
+## Consequences
+
+Advantages
+
+- Strong understanding of authentication
+- Production-style architecture
+- Scalable design
+- Easier transition to OAuth providers
+
+Trade-offs
+
+- Increased implementation complexity
+- Requires careful testing

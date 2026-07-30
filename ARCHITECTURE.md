@@ -510,3 +510,129 @@ app/(dev)/ui-preview
 - Verify responsiveness
 - Showcase component APIs
 - Reduce duplicated demo code
+
+
+## Authentication Architecture
+
+### Overview
+
+DevBoard uses a custom JWT-based authentication mechanism built on Next.js App Router.
+
+The authentication system is designed to be modular, secure, and scalable while following a feature-first architecture.
+
+### Authentication Flow
+
+User
+↓
+Login / Register
+↓
+API Route
+↓
+Validate Credentials
+↓
+Hash / Compare Password (bcryptjs)
+↓
+Generate JWT Tokens
+↓
+Store Tokens in HttpOnly Cookies
+↓
+Protected Routes
+↓
+Middleware Verification
+↓
+Authenticated Application
+
+### Token Strategy
+
+The application uses a dual-token approach.
+
+#### Access Token
+
+- Purpose: Authenticate API requests
+- Lifetime: 15 minutes
+- Storage: HttpOnly Cookie
+
+#### Refresh Token
+
+- Purpose: Generate new Access Tokens
+- Lifetime: 7 days
+- Storage: HttpOnly Cookie
+
+### Security Decisions
+
+- HttpOnly cookies
+- Secure cookies in production
+- SameSite=Lax
+- Password hashing using bcryptjs
+- JWT implementation using jose
+- No authentication data stored in localStorage
+- Middleware-based route protection
+
+### Authentication Pages
+
+/auth/login
+
+/auth/register
+
+/auth/forgot-password
+
+/auth/reset-password
+
+### Protected Routes
+
+/projects
+
+/dashboard
+
+/settings
+
+/profile
+
+### Folder Structure
+
+src/
+├── app/
+│   ├── (auth)/
+│   └── api/auth/
+│
+├── features/
+│   └── auth/
+│       ├── components/
+│       ├── services/
+│       ├── validation/
+│       ├── hooks/
+│       └── types/
+│
+├── lib/
+│   └── auth/
+│       ├── jwt.ts
+│       ├── cookies.ts
+│       └── password.ts
+│
+└── middleware.ts
+
+### Validation
+
+- React Hook Form
+- Zod
+
+### Authentication API
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+POST /api/auth/logout
+
+POST /api/auth/refresh
+
+GET /api/auth/me
+
+### Future Enhancements
+
+- Email Verification
+- Password Reset via Email
+- Google OAuth
+- GitHub OAuth
+- Two-Factor Authentication
+- Session Management

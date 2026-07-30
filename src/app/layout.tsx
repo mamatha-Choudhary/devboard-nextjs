@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+
+export const metadata: Metadata = {
+  title: {
+    default: "DevBoard",
+    template: "%s | DevBoard",
+  },
+  description:
+    "DevBoard is a modern workspace management platform for tracking projects, tasks, and engineering workflows.",
+};
 
 export default function RootLayout({
   children,

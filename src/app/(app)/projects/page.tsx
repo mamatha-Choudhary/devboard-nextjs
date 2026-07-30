@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { ProjectEmptyState } from "@/features/projects/components/ProjectEmptyState";
 import { ProjectFiltersBar } from "@/features/projects/components/ProjectFiltersBar";
 import { ProjectList } from "@/features/projects/components/ProjectList";
 import { getProjects } from "@/features/projects/services/project.service";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Manage, filter, and track all active workspace projects.",
+};
 
 interface ProjectsPageProps {
   searchParams: Promise<{

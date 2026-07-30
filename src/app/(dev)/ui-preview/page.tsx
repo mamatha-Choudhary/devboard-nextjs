@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { BadgePreview } from "./components/BadgePreview";
 import { ButtonPreview } from "./components/ButtonPreview";
 import { CardPreview } from "./components/CardPreview";
@@ -5,6 +6,11 @@ import { DropdownMenuPreview } from "./components/DropdownMenuPreview";
 import { InputPreview } from "./components/InputPreview";
 import { PreviewSection } from "./components/PreviewSection";
 import { ThemeToggle } from "./components/ThemeToggle";
+
+export const metadata: Metadata = {
+  title: "UI Design System Preview",
+  description: "Internal design system component showcase and UI preview.",
+};
 
 export default function UIPreviewPage() {
   return (
