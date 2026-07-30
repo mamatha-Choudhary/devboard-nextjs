@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { LogOut } from "lucide-react";
 import UserMenuAvatar from "./UserMenuAvatar";
 import {
   MOCK_USER,
   mainMenuItems,
-  footerMenuItems,
+  type UserProfile,
 } from "./user-menu-items";
 import {
   DropdownMenu,
@@ -15,8 +19,45 @@ import {
   DropdownMenuSeparator,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { AuthService } from "@/features/auth/services/auth.service";
 
 export default function UserMenu() {
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<UserProfile>(MOCK_USER);
+
+  useEffect(() => {
+    let isMounted = true;
+    AuthService.getCurrentUser()
+      .then((user) => {
+        if (isMounted && user) {
+          setCurrentUser({
+            name: user.name,
+            email: user.email,
+            role: user.role || "USER",
+            avatarUrl: user.avatarUrl,
+          });
+        }
+      })
+      .catch(() => {
+        // Fallback to default state
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await AuthService.logout();
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out error:", error);
+      router.replace("/login");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -25,7 +66,7 @@ export default function UserMenu() {
           aria-label="User menu"
           className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer"
         >
-          <UserMenuAvatar name={MOCK_USER.name} avatarUrl={MOCK_USER.avatarUrl} />
+          <UserMenuAvatar name={currentUser.name} avatarUrl={currentUser.avatarUrl} />
         </button>
       </DropdownMenuTrigger>
 
@@ -34,19 +75,19 @@ export default function UserMenu() {
         <DropdownMenuLabel className="font-normal p-0 pb-1">
           <div className="flex items-center gap-3 rounded-lg bg-muted/40 p-2.5 border border-border/40">
             <UserMenuAvatar
-              name={MOCK_USER.name}
-              avatarUrl={MOCK_USER.avatarUrl}
+              name={currentUser.name}
+              avatarUrl={currentUser.avatarUrl}
               className="h-9 w-9 text-xs"
             />
             <div className="flex flex-col min-w-0">
               <span className="truncate text-xs font-semibold text-foreground">
-                {MOCK_USER.name}
+                {currentUser.name}
               </span>
               <span className="truncate text-[11px] text-muted-foreground">
-                {MOCK_USER.email}
+                {currentUser.email}
               </span>
               <span className="mt-1 w-fit rounded-md bg-secondary px-1.5 py-0.5 text-[10px] font-medium text-secondary-foreground">
-                {MOCK_USER.role}
+                {currentUser.role}
               </span>
             </div>
           </div>
@@ -58,10 +99,26 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           {mainMenuItems.map((item) => {
             const Icon = item.icon;
-            return (
-              <DropdownMenuItem key={item.id} disabled={item.disabled}>
+            const content = (
+              <>
                 <Icon className="h-4 w-4 text-muted-foreground" />
                 <span>{item.label}</span>
+              </>
+            );
+
+            if (!item.disabled && item.href) {
+              return (
+                <DropdownMenuItem key={item.id} asChild>
+                  <Link href={item.href} className="w-full cursor-pointer">
+                    {content}
+                  </Link>
+                </DropdownMenuItem>
+              );
+            }
+
+            return (
+              <DropdownMenuItem key={item.id} disabled={item.disabled}>
+                {content}
               </DropdownMenuItem>
             );
           })}
@@ -69,20 +126,14 @@ export default function UserMenu() {
 
         <DropdownMenuSeparator />
 
-        {/* Footer Menu Items (e.g. Sign Out) */}
-        {footerMenuItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <DropdownMenuItem
-              key={item.id}
-              disabled={item.disabled}
-              className={item.isDanger ? "text-muted-foreground" : undefined}
-            >
-              <Icon className="h-4 w-4" />
-              <span>{item.label}</span>
-            </DropdownMenuItem>
-          );
-        })}
+        {/* Sign Out Action */}
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="text-destructive focus:text-destructive cursor-pointer"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Sign Out</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

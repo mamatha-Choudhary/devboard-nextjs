@@ -28,7 +28,7 @@ export const mainMenuItems: UserMenuItem[] = [
     label: "Profile",
     icon: User,
     href: "/profile",
-    disabled: true,
+    disabled: false,
   },
   {
     id: "settings",
@@ -50,7 +50,7 @@ export const footerMenuItems: UserMenuItem[] = [
     id: "signout",
     label: "Sign Out",
     icon: LogOut,
-    disabled: true,
+    disabled: false,
     isDanger: true,
   },
 ];

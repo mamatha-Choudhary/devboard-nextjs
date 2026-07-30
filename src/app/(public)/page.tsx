@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/session";
 
-export const metadata: Metadata = {
-  title: "Home",
-  description:
-    "Welcome to DevBoard — Manage your engineering workspace and team projects effectively.",
-};
+export default async function HomePage() {
+  const user = await getCurrentUser();
 
-export default function HomePage() {
-  return <h1>Home Page</h1>;
+  if (user) {
+    redirect("/dashboard");
+  } else {
+    redirect("/login");
+  }
 }

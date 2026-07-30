@@ -1,11 +1,20 @@
 /**
  * Authentication Configuration (Single Source of Truth)
- * Centralizes all authentication settings, token lifespans, cookie options, and JWT rules.
+ * Centralizes all authentication settings, token lifespans, cookie options, JWT rules, and protected routes.
  */
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 export const AUTH_CONFIG = {
+  // Route Configuration
+  routes: {
+    protected: ["/dashboard", "/projects", "/settings", "/profile"],
+    auth: ["/login", "/register", "/forgot-password", "/reset-password"],
+    public: ["/"],
+    defaultRedirectAfterLogin: "/dashboard",
+    defaultRedirectAfterLogout: "/login",
+  },
+
   // Token Expiration Rules
   tokens: {
     accessToken: {
@@ -35,9 +44,19 @@ export const AUTH_CONFIG = {
     },
   },
 
-  // Environment Secret Keys (Reads from process.env with fallback for development safety)
+  // Role Definitions for Authorization Foundation
+  roles: {
+    USER: "USER",
+    ADMIN: "ADMIN",
+    MEMBER: "MEMBER",
+    OWNER: "OWNER",
+  } as const,
+
+  // Environment Secret Keys
   secrets: {
     jwtSecret: process.env.JWT_SECRET || "devboard_default_jwt_secret_key_change_in_prod",
     refreshSecret: process.env.JWT_REFRESH_SECRET || "devboard_default_refresh_secret_key_change_in_prod",
   },
 } as const;
+
+export type UserRole = keyof typeof AUTH_CONFIG.roles;

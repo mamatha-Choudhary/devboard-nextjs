@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, AlertCircle } from "lucide-react";
@@ -73,7 +74,18 @@ export default function LoginPage() {
           />
         </AuthFormField>
 
-        <AuthFormField id="password" label="Password" error={errors.password?.message}>
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label htmlFor="password" className="text-xs font-semibold text-foreground">
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-xs font-medium text-primary hover:underline transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <PasswordInput
             id="password"
             placeholder="••••••••"
@@ -81,7 +93,12 @@ export default function LoginPage() {
             disabled={isSubmitting}
             {...register("password")}
           />
-        </AuthFormField>
+          {errors.password?.message && (
+            <p className="mt-1.5 text-xs font-medium text-destructive">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
 
         <Button
           type="submit"
