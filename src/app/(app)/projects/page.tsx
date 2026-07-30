@@ -26,15 +26,28 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   });
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">Projects</h1>
-        <ProjectFiltersBar
-          search={search}
-          status={status}
-          favorites={favorites === "true"}
-        />
+    <div className="p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Projects
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Manage, track, and collaborate on your active workspace projects.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
+            {projects.length} {projects.length === 1 ? "project" : "projects"}
+          </span>
+        </div>
       </div>
+
+      <ProjectFiltersBar
+        search={search}
+        status={status}
+        favorites={favorites === "true"}
+      />
 
       {projects.length > 0 ? (
         <ProjectList projects={projects} />

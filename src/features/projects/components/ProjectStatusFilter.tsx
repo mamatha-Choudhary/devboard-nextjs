@@ -15,7 +15,7 @@ const statusOptions: Array<ProjectStatus | "All"> = [
   "Archived",
 ];
 
-/** Renders a simple status dropdown for project filtering. */
+/** Renders a styled status dropdown for project filtering. */
 export const ProjectStatusFilter = ({ value = "All" }: ProjectStatusFilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,19 +36,25 @@ export const ProjectStatusFilter = ({ value = "All" }: ProjectStatusFilterProps)
   };
 
   return (
-    <label className="flex items-center gap-2 text-sm text-gray-700">
-      <span>Status</span>
+    <div className="flex flex-col gap-1.5">
+      <label
+        htmlFor="status-filter-select"
+        className="text-xs font-medium text-muted-foreground"
+      >
+        Status
+      </label>
       <select
+        id="status-filter-select"
         value={value}
         onChange={(event) => handleChange(event.target.value)}
-        className="rounded border border-gray-300 px-3 py-2"
+        className="h-10 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20 focus:outline-hidden cursor-pointer"
       >
         {statusOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option} value={option} className="bg-background text-foreground">
+            {option === "All" ? "All Statuses" : option}
           </option>
         ))}
       </select>
-    </label>
+    </div>
   );
 };

@@ -4,22 +4,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
+  "inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900",
+          "border-transparent bg-primary text-primary-foreground shadow-xs",
         secondary:
-          "border-transparent bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
+          "border-transparent bg-secondary text-secondary-foreground",
         outline:
-          "border-slate-300 bg-transparent text-slate-700 dark:border-slate-700 dark:text-slate-200",
+          "border-border bg-muted/60 text-foreground font-medium",
         success:
-          "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300",
+          "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300",
         warning:
-          "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300",
+          "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300",
         destructive:
-          "border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300",
+          "border-destructive/20 bg-destructive/10 text-destructive dark:bg-destructive/20",
       },
       size: {
         sm: "px-2 py-0.5 text-[11px]",
