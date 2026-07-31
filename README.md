@@ -1,4 +1,4 @@
-# 🚀 DevBoard
+# DevBoard
 
 > A modern, scalable Project Management SaaS built with **Next.js 15**, **React 19**, **TypeScript**, **Prisma**, and **PostgreSQL**, following Clean Architecture, Feature-First Design, and modern frontend best practices.
 
