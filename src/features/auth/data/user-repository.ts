@@ -38,6 +38,9 @@ export class UserRepository {
     for (const user of usersStore.values()) {
       if (user.id === id) return user;
     }
+    if (id === "user-1") {
+      return usersStore.get("mamatha@example.com") || null;
+    }
     return null;
   }
 

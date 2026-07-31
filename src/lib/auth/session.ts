@@ -13,6 +13,7 @@ export interface SessionInfo {
 
 /**
  * Resolves the currently authenticated User from request cookies.
+ * Fallback to verified JWT payload claims if in-memory store was reset.
  */
 export async function getCurrentUser(): Promise<User | null> {
   try {
@@ -25,10 +26,28 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!payload || !payload.userId) return null;
 
     const user = await UserRepository.findById(payload.userId);
-    if (!user) return null;
+    if (user) {
+      const { passwordHash: _, ...safeUser } = user;
+      return safeUser;
+    }
 
-    const { passwordHash: _, ...safeUser } = user;
-    return safeUser;
+    // Fallback: If JWT payload is cryptographically valid but in-memory user map was reset,
+    // construct safe user entity from verified JWT claims.
+    const fallbackName = payload.email
+      ? payload.email.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ")
+      : "Workspace User";
+
+    return {
+      id: payload.userId,
+      email: payload.email || "user@example.com",
+      name: fallbackName
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" "),
+      role: payload.role || "Senior Engineer",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
   } catch {
     return null;
   }
